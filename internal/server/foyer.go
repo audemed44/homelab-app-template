@@ -44,7 +44,7 @@ type foyerWidget struct {
 func (s *Server) foyerWidget(w http.ResponseWriter, r *http.Request) {
 	items, err := s.Store.Items(r.Context())
 	if err != nil {
-		storeError(w, err)
+		storeError(w, r, err)
 		return
 	}
 	done := 0

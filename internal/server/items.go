@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/audemed44/skeleton/internal/logging"
 	"github.com/audemed44/skeleton/internal/store"
 )
 
@@ -14,7 +15,7 @@ import (
 func (s *Server) listItems(w http.ResponseWriter, r *http.Request) {
 	items, err := s.Store.Items(r.Context())
 	if err != nil {
-		storeError(w, err)
+		storeError(w, r, err)
 		return
 	}
 	writeJSON(w, http.StatusOK, items)
@@ -40,13 +41,14 @@ func (s *Server) saveItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := s.Store.SaveItem(r.Context(), &it); err != nil {
-		storeError(w, err)
+		storeError(w, r, err)
 		return
 	}
 	status := http.StatusOK
 	if r.Method == http.MethodPost {
 		status = http.StatusCreated
 	}
+	logging.Audit(r.Context(), "item.save", "id", it.ID)
 	writeJSON(w, status, it)
 }
 
@@ -56,8 +58,9 @@ func (s *Server) deleteItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := s.Store.DeleteItem(r.Context(), id); err != nil {
-		storeError(w, err)
+		storeError(w, r, err)
 		return
 	}
+	logging.Audit(r.Context(), "item.delete", "id", id)
 	w.WriteHeader(http.StatusNoContent)
 }

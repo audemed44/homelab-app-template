@@ -30,7 +30,19 @@ See [docker-compose.example.yml](docker-compose.example.yml) for every option.
 | `SKELETON_DATA_DIR` | `/data` | Where the database lives |
 | `SKELETON_PORT` | `8080` | Port inside the container |
 | `HOMEPAGE_URL` | | Foyer's address, linked from the header |
-| `SKELETON_DEBUG` | | Set to log debug messages |
+| `LOG_LEVEL` | `info` | `debug`, `info`, `warn` or `error` |
+| `LOG_FORMAT` | `json` | `text` for reading in a terminal |
+
+## Logs
+
+One JSON object per line on stderr, for
+[Logbook](https://github.com/audemed44/logbook) to collect: every request
+(failures as errors, changes at info, plain reads at debug), background
+jobs with how long they took, and an audit line for what people do. A
+message repeated more than 20 times a minute is held back and counted, at
+most 600 lines a minute get out, and long values are cut at 4 KB, so a
+failing app can't flood the disk. Docker's own copy is capped in compose
+(`logging:`, 3 × 10 MB).
 
 ## Foyer
 
