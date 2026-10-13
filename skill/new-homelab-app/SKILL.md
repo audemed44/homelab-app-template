@@ -112,7 +112,8 @@ rule). Run `git status` there first, because Hoist commits too.
 1. **Compose**: add the service to `~/homelab/main-stack/docker-compose.yml`
    after the last app, copying Parlor's or Ledger's block. Include
    `user: "1000:1000"`, `TZ`, `<NAME>_TOKEN`, `HOMEPAGE_URL`,
-   `./<name>:/data`, `"<port>:8080"` and `mem_limit: 64m`. Add the keys
+   `./<name>:/data`, `"<port>:8080"`, `mem_limit: 64m` and the
+   `logging: *logging` cap the other services use. Add the keys
    (with blank values) to `main-stack/.env.example`.
 2. **Token**: generate it with `openssl rand -hex 32` and **append** it to
    `main-stack/.env` (`echo '<NAME>_TOKEN=…' >> .env`). Read the file first.

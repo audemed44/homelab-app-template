@@ -15,6 +15,7 @@ import (
 	"time"
 	_ "time/tzdata" // the runtime image may have no zoneinfo; TZ needs this
 
+	"github.com/audemed44/skeleton/internal/logging"
 	"github.com/audemed44/skeleton/internal/server"
 	"github.com/audemed44/skeleton/internal/store"
 	"github.com/audemed44/skeleton/web"
@@ -31,11 +32,7 @@ func main() {
 	if len(os.Args) > 1 && os.Args[1] == "healthcheck" {
 		os.Exit(healthcheck())
 	}
-	level := slog.LevelInfo
-	if os.Getenv("SKELETON_DEBUG") != "" {
-		level = slog.LevelDebug
-	}
-	slog.SetDefault(slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: level})))
+	logging.Setup("skeleton", os.Stderr)
 
 	token := os.Getenv("SKELETON_TOKEN")
 	if token == "" {
@@ -67,6 +64,7 @@ func main() {
 		Addr:              ":" + env("SKELETON_PORT", "8080"),
 		Handler:           app.Handler(),
 		ReadHeaderTimeout: 10 * time.Second,
+		ErrorLog:          logging.ServerErrorLog(),
 	}
 	go func() {
 		<-ctx.Done()
