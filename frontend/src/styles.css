@@ -327,6 +327,21 @@ pre {
   .home-link-text {
     display: none;
   }
+  /* The nav gets its own row, scrolling sideways if it has to. */
+  .topbar {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+  .topnav {
+    order: 3;
+    width: 100%;
+    margin-left: -10px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .topnav a {
+    flex: none;
+  }
 }
 .brand-mark {
   width: 14px;
